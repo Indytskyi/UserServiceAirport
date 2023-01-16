@@ -15,11 +15,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "passenger")
-public class PassengerEntity {
+public class Passenger {
     @Id
+    @Column(name = "user_id")
+    private Long id;
+
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity userEntity;
+    private User user;
 
     @NotNull(message = "Input correct Name")
     @Size(min = 10, message = "Input correct name")

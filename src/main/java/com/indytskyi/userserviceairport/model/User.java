@@ -8,14 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
-import java.io.Serializable;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class UserEntity implements Serializable {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +26,13 @@ public class UserEntity implements Serializable {
             message = "Incorrect format of password")
     private String password;
 
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "user")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private PassengerEntity passengerEntity;
+    @PrimaryKeyJoinColumn
+    private Passenger passenger;
 
-    public void setPassengerEntity(PassengerEntity passengerEntity) {
-        this.passengerEntity = passengerEntity;
-        passengerEntity.setUserEntity(this);
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+        passenger.setUser(this);
     }
 }

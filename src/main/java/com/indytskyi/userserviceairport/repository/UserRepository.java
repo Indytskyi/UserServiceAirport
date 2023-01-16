@@ -1,9 +1,9 @@
 package com.indytskyi.userserviceairport.repository;
 
-import com.indytskyi.userserviceairport.model.UserEntity;
+import com.indytskyi.userserviceairport.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 }
