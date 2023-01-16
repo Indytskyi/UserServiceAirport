@@ -27,11 +27,11 @@ public class Passenger {
 
     @NotNull(message = "Input correct Name")
     @Size(min = 10, message = "Input correct name")
-    private String name;
+    private String firstName;
 
     @NotNull(message = "Input correct Name")
     @Size(min = 10, message = "Input correct surname")
-    private String username;
+    private String lastName;
 
     @Temporal(TemporalType.DATE)
     private Date dataBirth;

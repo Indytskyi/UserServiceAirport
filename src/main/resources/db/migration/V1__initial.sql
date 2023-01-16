@@ -6,8 +6,8 @@ CREATE TABLE users (
 
 CREATE TABLE passengers (
     user_id BIGSERIAL PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-    "name" varchar NOT NULL,
-    surname varchar NOT NULL,
+    first_name varchar NOT NULL,
+    last_name varchar NOT NULL,
     data_birth DATE NOT NULL,
     gender varchar NOT NULL,
     photo varchar NOT NULL
