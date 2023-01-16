@@ -1,11 +1,10 @@
 package com.indytskyi.userserviceairport.model;
 
+import com.indytskyi.userserviceairport.model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +14,9 @@ import java.util.Collection;
 @Entity
 @Data
 @AllArgsConstructor
+@Builder(toBuilder = true, builderMethodName = "of")
 @NoArgsConstructor
+@ToString(exclude = "passenger")
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -30,14 +31,15 @@ public class User implements UserDetails {
             message = "Incorrect format of password")
     private String password;
 
-    @OneToOne(mappedBy = "user")
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @PrimaryKeyJoinColumn
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Passenger passenger;
 
     public void setPassenger(Passenger passenger) {
-        this.passenger = passenger;
         passenger.setUser(this);
+        this.passenger = passenger;
     }
 
     @Override

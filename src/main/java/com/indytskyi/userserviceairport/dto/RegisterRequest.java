@@ -1,4 +1,4 @@
-package com.indytskyi.dto;
+package com.indytskyi.userserviceairport.dto;
 
 import com.indytskyi.userserviceairport.model.enums.Gender;
 import lombok.AllArgsConstructor;
