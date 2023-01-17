@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -34,13 +36,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .gender(request.getGender())
-                .photo("")
+                .photo(request.getPhoto())
                 .dataBirth(request.getDateOfBirth())
                 .build();
         user.setPassenger(passenger);
         userRepository.save(user);
-//        passengerRepository.save(passenger);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

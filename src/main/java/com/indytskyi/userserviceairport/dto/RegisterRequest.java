@@ -19,7 +19,7 @@ public class RegisterRequest {
   private String lastName;
   private Gender gender;
   private Date dateOfBirth;
-  private String photoLink;
+  private String photo;
 
 
 }
