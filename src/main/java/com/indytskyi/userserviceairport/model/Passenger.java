@@ -24,10 +24,8 @@ public class Passenger {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Size(min = 3, message = "Input correct firstName")
     private String firstName;
 
-    @Size(min = 3, message = "Input correct lastName")
     private String lastName;
 
     @Temporal(TemporalType.DATE)
