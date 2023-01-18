@@ -3,6 +3,8 @@ package com.indytskyi.userserviceairport.service.impl;
 import com.indytskyi.userserviceairport.dto.AuthenticationRequest;
 import com.indytskyi.userserviceairport.dto.AuthenticationResponse;
 import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.exception.ApiValidationException;
+import com.indytskyi.userserviceairport.exception.ErrorResponse;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.enums.Gender;
@@ -17,13 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
-    private final PassengerRepository passengerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
