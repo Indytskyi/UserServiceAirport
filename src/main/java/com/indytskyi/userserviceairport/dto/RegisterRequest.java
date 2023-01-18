@@ -25,7 +25,9 @@ public class RegisterRequest {
   private String firstName;
   @Size(min = 3, message = "Input correct lastName")
   private String lastName;
-  private Gender gender;
+
+  @Pattern(regexp = "MALE|FEMALE")
+  private String gender;
   private Date dateOfBirth;
   private String photo;
 

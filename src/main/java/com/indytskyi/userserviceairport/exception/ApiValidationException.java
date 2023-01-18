@@ -8,7 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class ApiValidationException extends RuntimeException {
-
     private List<ErrorResponse> errorResponses;
 
 }

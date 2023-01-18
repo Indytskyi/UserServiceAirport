@@ -10,4 +10,6 @@ public interface PassengerService {
 
 
     PassengerDto getPassengerByEmail(String email);
+
+     Object getAllPassengerOrByEmail(String email);
 }

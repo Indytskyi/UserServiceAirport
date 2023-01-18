@@ -15,13 +15,14 @@ public class PassengerController {
 
     private final PassengerService passengerService;
 
-    @GetMapping
-    public ResponseEntity<List<PassengerDto>> getAllPassenges() {
-        return ResponseEntity.ok(passengerService.getAllPassenger());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<PassengerDto>> getAllPassenges() {
+//        return ResponseEntity.ok(passengerService.getAllPassenger());
+//    }
 
-    @GetMapping("/{email}")
-    public  ResponseEntity<PassengerDto> getPassenerByEmail(@PathVariable String email) {
-        return  ResponseEntity.ok(passengerService.getPassengerByEmail(email));
+    @GetMapping
+    public  ResponseEntity<Object> getPassenerAllOrByEmail(
+            @RequestParam(required = false, defaultValue = "ALL") String email) {
+        return  ResponseEntity.ok(passengerService.getAllPassengerOrByEmail(email));
     }
 }

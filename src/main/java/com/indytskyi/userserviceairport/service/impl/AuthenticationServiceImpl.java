@@ -1,14 +1,16 @@
-package com.indytskyi.userserviceairport.service;
+package com.indytskyi.userserviceairport.service.impl;
 
 import com.indytskyi.userserviceairport.dto.AuthenticationRequest;
 import com.indytskyi.userserviceairport.dto.AuthenticationResponse;
 import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
+import com.indytskyi.userserviceairport.model.enums.Gender;
 import com.indytskyi.userserviceairport.model.enums.Role;
 import com.indytskyi.userserviceairport.repository.PassengerRepository;
 import com.indytskyi.userserviceairport.repository.UserRepository;
 import com.indytskyi.userserviceairport.security.jwt.JwtService;
+import com.indytskyi.userserviceairport.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var passenger = Passenger.of()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .gender(request.getGender())
+                .gender(Gender.valueOf(request.getGender()))
                 .photo(request.getPhoto())
                 .dataBirth(request.getDateOfBirth())
                 .build();
