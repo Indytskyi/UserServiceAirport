@@ -1,6 +1,5 @@
 package com.indytskyi.userserviceairport.security.jwt;
 
-import com.indytskyi.userserviceairport.model.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

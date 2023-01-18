@@ -27,9 +27,8 @@ public class EmailSenderImpl implements EmailSender {
             helper.setSubject("Confirm your email");
             helper.setFrom("artem234325@gmail.com");
             mailSender.send(message);
-
         } catch (MessagingException e) {
-            log.error("failed ti send email", e);
+            log.error("failed to send email", e);
             throw  new IllegalStateException("failed to send email");
         }
     }
