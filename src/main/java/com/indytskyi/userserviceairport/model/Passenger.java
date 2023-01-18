@@ -19,24 +19,15 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @Size(min = 3, message = "Input correct firstName")
     private String firstName;
-
-    @Size(min = 3, message = "Input correct lastName")
     private String lastName;
-
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dataBirth;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
     private String photo;
-
 }
