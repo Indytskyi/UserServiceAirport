@@ -31,6 +31,9 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean enabled;
+    private boolean locked;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Passenger passenger;
 
@@ -55,7 +58,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -65,6 +68,6 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }
