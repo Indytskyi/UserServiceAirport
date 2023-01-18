@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/airport/user/")
 @RequiredArgsConstructor
 public class AuthenticationController {
-
   private final AuthenticationService service;
 
   @PostMapping("/register")
@@ -31,8 +30,5 @@ public class AuthenticationController {
   public String confirm(@RequestParam("token") String token) {
     return service.confirmToken(token);
   }
-
-
-
 
 }

@@ -1,5 +1,6 @@
-package com.indytskyi.userserviceairport.email;
+package com.indytskyi.userserviceairport.email.impl;
 
+import com.indytskyi.userserviceairport.email.EmailSender;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class EmailSenderImpl implements EmailSender{
+public class EmailSenderImpl implements EmailSender {
 
     private JavaMailSender mailSender;
     @Override

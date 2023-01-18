@@ -12,7 +12,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
-
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public void saveConfirmationToken(ConfirmationToken confirmationToken) {

@@ -6,12 +6,7 @@ import com.indytskyi.userserviceairport.model.User;
 import java.util.List;
 
 public interface PassengerService {
-
     List<PassengerDto> getAllPassenger();
-
-
     PassengerDto getPassengerByEmail(String email);
-
      Object getAllPassengerOrByEmail(String email);
-
 }

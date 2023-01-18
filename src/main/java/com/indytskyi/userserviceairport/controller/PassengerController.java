@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/airport/passenger")
 @RequiredArgsConstructor
 public class PassengerController {
-
     private final PassengerService passengerService;
 
     @GetMapping
