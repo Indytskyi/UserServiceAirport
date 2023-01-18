@@ -15,11 +15,6 @@ public class PassengerController {
 
     private final PassengerService passengerService;
 
-//    @GetMapping
-//    public ResponseEntity<List<PassengerDto>> getAllPassenges() {
-//        return ResponseEntity.ok(passengerService.getAllPassenger());
-//    }
-
     @GetMapping
     public  ResponseEntity<Object> getPassenerAllOrByEmail(
             @RequestParam(required = false, defaultValue = "ALL") String email) {
