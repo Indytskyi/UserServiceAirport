@@ -1,13 +1,11 @@
 package com.indytskyi.userserviceairport.exception.handler;
 
-import com.indytskyi.userserviceairport.exception.ApiExceptionObject;
-import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
-import com.indytskyi.userserviceairport.exception.ErrorResponse;
-import com.indytskyi.userserviceairport.exception.UserNotFoundException;
+import com.indytskyi.userserviceairport.exception.*;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,6 +54,29 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
     }
 
+    @ExceptionHandler(value = {
+            AuthTokenException.class
+    })
+    public ResponseEntity<ApiExceptionObject> handleLimitedPermissionException(
+            RuntimeException e
+    ) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<List<ErrorResponse>> handleException(
+            ApiValidationException e) {
+        return new ResponseEntity<>(e.getErrorResponses(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(
+            BadCredentialsException e) {
+        return new ResponseEntity<>(new ErrorResponse("Authentication",
+                "Your email or password is incorrect"),
+                HttpStatus.FORBIDDEN);
+    }
 
     private ApiExceptionObject getApiExceptionObject(String message, HttpStatus status) {
         return new ApiExceptionObject(
@@ -64,5 +85,7 @@ public class ApiExceptionHandler {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
     }
+
+
     
 }

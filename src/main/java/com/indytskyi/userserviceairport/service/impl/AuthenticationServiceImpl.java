@@ -53,4 +53,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
         return new AuthenticationResponse(jwtToken, refreshToken.getToken());
     }
+
+    @Override
+    public ValidateTokenResponseDto validateToken(String bearerToken) {
+        var token = jwtService.resolveToken(bearerToken);
+        jwtService.validateToken(token);
+        var email = jwtService.getUserName(token);
+        var user = userService.findByEmail(email);
+
+        return ValidateTokenResponseDto.of()
+                .userId(user.getId())
+                .role(user.getRole().name())
+                .build();
+    }
 }

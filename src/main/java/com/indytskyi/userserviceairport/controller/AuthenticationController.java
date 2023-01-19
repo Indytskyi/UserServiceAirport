@@ -45,4 +45,11 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequestDto));
   }
 
+  @GetMapping("/validate-token")
+  public ResponseEntity<ValidateTokenResponseDto> validateToken(
+          @RequestHeader("Authorization") String bearerToken
+  ) {
+    return ResponseEntity.ok(authenticationService.validateToken(bearerToken));
+  }
+
 }

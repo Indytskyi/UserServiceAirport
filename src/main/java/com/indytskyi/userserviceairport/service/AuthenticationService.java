@@ -5,5 +5,8 @@ import com.indytskyi.userserviceairport.model.User;
 
 public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request);
+
     AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
+
+    ValidateTokenResponseDto validateToken(String token);
 }
