@@ -1,5 +1,6 @@
 package com.indytskyi.userserviceairport.repository;
 
+import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,9 @@ import java.util.Optional;
 @Repository
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
 
-    Optional<ConfirmationToken> findByToken (String token);
+    Optional<ConfirmationToken> findByToken(String token);
+
+    void deleteByUser(User user);
 
     @Transactional
     @Modifying
@@ -22,5 +25,5 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
             "SET c.confirmedAt = ?2 " +
             "WHERE c.token = ?1")
     void updateConfirmedAt(String token,
-                          LocalDateTime confirmedAt);
+                           LocalDateTime confirmedAt);
 }

@@ -10,4 +10,6 @@ public interface AuthenticationService {
     RegisterResponseDto register(RegisterRequest request);
     AuthenticationResponse authenticate(AuthenticationRequest request);
     String confirmToken(String token);
+
+    Object resendEmail(String email);
 }

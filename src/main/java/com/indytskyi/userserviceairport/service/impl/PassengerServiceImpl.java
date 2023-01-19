@@ -1,8 +1,11 @@
 package com.indytskyi.userserviceairport.service.impl;
 
 import com.indytskyi.userserviceairport.dto.PassengerDto;
+import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.exception.ApiValidationException;
 import com.indytskyi.userserviceairport.exception.ErrorResponse;
+import com.indytskyi.userserviceairport.model.Passenger;
+import com.indytskyi.userserviceairport.model.enums.Gender;
 import com.indytskyi.userserviceairport.repository.PassengerRepository;
 import com.indytskyi.userserviceairport.repository.UserRepository;
 import com.indytskyi.userserviceairport.service.PassengerService;
@@ -41,5 +44,16 @@ public class PassengerServiceImpl implements PassengerService {
         return email.equals("ALL")
                 ? getAllPassenger()
                 : getPassengerByEmail(email);
+    }
+
+    @Override
+    public Passenger createPassenger(RegisterRequest request) {
+        return Passenger.of()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .gender(Gender.valueOf(request.getGender()))
+                .photo(request.getPhoto())
+                .dataBirth(request.getDateOfBirth())
+                .build();
     }
 }

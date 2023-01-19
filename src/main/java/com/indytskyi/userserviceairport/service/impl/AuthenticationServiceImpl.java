@@ -6,38 +6,33 @@ import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
 import com.indytskyi.userserviceairport.email.BuildEmail;
 import com.indytskyi.userserviceairport.email.EmailSender;
-import com.indytskyi.userserviceairport.model.Passenger;
+import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
+import com.indytskyi.userserviceairport.exception.UserNotFoundException;
 import com.indytskyi.userserviceairport.model.User;
-import com.indytskyi.userserviceairport.model.enums.Gender;
-import com.indytskyi.userserviceairport.model.enums.Role;
 import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
-import com.indytskyi.userserviceairport.repository.UserRepository;
 import com.indytskyi.userserviceairport.security.jwt.JwtService;
 import com.indytskyi.userserviceairport.service.AuthenticationService;
 import com.indytskyi.userserviceairport.service.ConfirmationTokenService;
+import com.indytskyi.userserviceairport.service.PassengerService;
+import com.indytskyi.userserviceairport.service.UserService;
 import com.indytskyi.userserviceairport.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Value("${LINK_TO_CONFIRM_REGISTRATION}")
-    private String linkToConfirmRegistration;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PassengerService passengerService;
+    private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenService confirmationTokenService;
@@ -47,33 +42,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public RegisterResponseDto register(RegisterRequest request) {
-        var user = User.of()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .enabled(false)
-                .role(Role.USER).build();
-        var passenger = Passenger.of()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .gender(Gender.valueOf(request.getGender()))
-                .photo(request.getPhoto())
-                .dataBirth(request.getDateOfBirth())
-                .build();
-        user.setPassenger(passenger);
-        userRepository.save(user);
 
-        String token = UUID.randomUUID().toString();
-        var confirmationToken = ConfirmationToken.of()
-                .token(token)
-                .localDateTime(LocalDateTime.now())
-                .expiredAt(LocalDateTime.now().plusMinutes(15))
-                .user(user)
-                .build();
+        var passenger = passengerService.createPassenger(request);
+        var user = userService.createUser(request, passenger);
 
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        String link = linkToConfirmRegistration + token;
+        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
         emailSender.send(request.getEmail(),
-                buildEmail.buildEmail(request.getFirstName(), link));
+                buildEmail.buildEmail(request.getFirstName(), linkToConfirmEmail));
 
         return new RegisterResponseDto(
                 ResponseMessage.REGISTER_SUCCESSFUL_MESSAGE.getData(),
@@ -89,8 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         request.password()
                 )
         );
-        var user = userRepository.findByEmail(request.email())
-                .orElseThrow();
+        var user = userService.findByEmail(request.email());
         var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
         return new AuthenticationResponse(jwtToken);
     }
@@ -112,8 +86,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userRepository.enableUser(
-                confirmationToken.getUser().getEmail());
+        userService.enableUser(confirmationToken.getUser().getEmail());
         return "confirmed";
     }
+
+    @Transactional
+    @Override
+    public Object resendEmail(String email) {
+        var user = userService.findByEmail(email);
+        checkIfUserIsEnabled(user);
+        confirmationTokenService.deleteOldConfirmationToken(user);
+        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
+        emailSender.send(email,
+                buildEmail.buildEmail(user.getPassenger().getFirstName(), linkToConfirmEmail));
+        return "Nce";
+    }
+
+    private void checkIfUserIsEnabled(User user) {
+        if (user.isEnabled())
+            throw new ConfirmationTokenInvalidException("Your email: " + user.getEmail() + " was already confirmed");
+    }
+
 }
