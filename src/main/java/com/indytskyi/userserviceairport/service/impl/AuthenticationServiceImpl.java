@@ -25,31 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final PassengerService passengerService;
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final ConfirmationTokenService confirmationTokenService;
-    private final EmailSender emailSender;
-    private final BuildEmail buildEmail;
     private final RefreshTokenService refreshTokenService;
-
-    @Override
-    @Transactional
-    public RegisterResponseDto register(RegisterRequest request) {
-
-        var passenger = passengerService.createPassenger(request);
-        var user = userService.createUser(request, passenger);
-
-        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
-        emailSender.send(request.getEmail(),
-                buildEmail.buildEmail(request.getFirstName(), linkToConfirmEmail));
-
-        return new RegisterResponseDto(
-                ResponseMessage.REGISTER_SUCCESSFUL_MESSAGE.getData(),
-                ResponseMessage.REGISTER_SECCESSFUL_URl.getData()
-        );
-    }
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -67,39 +46,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthenticationResponse(jwtToken, refreshToken.getToken());
     }
 
-    @Transactional
-    public String confirmToken(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
-                .orElseThrow(() -> new IllegalStateException("token not found"));
-
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
-        }
-
-        LocalDateTime expiredAt = confirmationToken.getExpiredAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
-        }
-
-        confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(confirmationToken.getUser().getEmail());
-        return "confirmed";
-    }
-
-    @Transactional
-    @Override
-    public Object resendEmail(String email) {
-        var user = userService.findByEmail(email);
-        checkIfUserIsEnabled(user);
-        confirmationTokenService.deleteOldConfirmationToken(user);
-        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
-        emailSender.send(email,
-                buildEmail.buildEmail(user.getPassenger().getFirstName(), linkToConfirmEmail));
-        return "Nce";
-    }
-
     @Override
     public AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         var refreshToken = refreshTokenService.resolveRefreshToken(refreshTokenRequestDto.token());
@@ -107,10 +53,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
         return new AuthenticationResponse(jwtToken, refreshToken.getToken());
     }
-
-    private void checkIfUserIsEnabled(User user) {
-        if (user.isEnabled())
-            throw new ConfirmationTokenInvalidException("Your email: " + user.getEmail() + " was already confirmed");
-    }
-
 }
