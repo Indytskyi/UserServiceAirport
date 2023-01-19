@@ -6,6 +6,8 @@ import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
 import com.indytskyi.userserviceairport.email.BuildEmail;
 import com.indytskyi.userserviceairport.email.EmailSender;
+import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
+import com.indytskyi.userserviceairport.exception.UserNotFoundException;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.enums.Gender;
@@ -34,8 +36,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Value("${LINK_TO_CONFIRM_REGISTRATION}")
-    private String linkToConfirmRegistration;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -62,18 +63,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassenger(passenger);
         userRepository.save(user);
 
-        String token = UUID.randomUUID().toString();
-        var confirmationToken = ConfirmationToken.of()
-                .token(token)
-                .localDateTime(LocalDateTime.now())
-                .expiredAt(LocalDateTime.now().plusMinutes(15))
-                .user(user)
-                .build();
-
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        String link = linkToConfirmRegistration + token;
+        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
         emailSender.send(request.getEmail(),
-                buildEmail.buildEmail(request.getFirstName(), link));
+                buildEmail.buildEmail(request.getFirstName(), linkToConfirmEmail));
 
         return new RegisterResponseDto(
                 ResponseMessage.REGISTER_SUCCESSFUL_MESSAGE.getData(),
@@ -116,4 +108,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 confirmationToken.getUser().getEmail());
         return "confirmed";
     }
+
+    @Transactional
+    @Override
+    public Object resendEmail(String email) {
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email: " + email + " doesn't exist"));
+        checkIfUserIsEnabled(user);
+        confirmationTokenService.deleteOldConfirmationToken(user);
+        var linkToConfirmEmail = confirmationTokenService.createConfirmationToken(user);
+        emailSender.send(email,
+                buildEmail.buildEmail(user.getPassenger().getFirstName(), linkToConfirmEmail));
+        return null;
+    }
+
+    private void checkIfUserIsEnabled(User user) {
+        if (user.isEnabled())
+            throw new ConfirmationTokenInvalidException("Your email: " + user.getEmail() + " was already confirmed");
+    }
+
 }

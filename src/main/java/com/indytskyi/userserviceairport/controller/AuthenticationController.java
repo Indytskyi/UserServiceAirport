@@ -29,9 +29,13 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.authenticate(request));
   }
 
-  @GetMapping("/register/confirm")
+  @GetMapping("/confirm")
   public ResponseEntity<String> confirm(@RequestParam("token") String token) {
     return ResponseEntity.ok(authenticationService.confirmToken(token));
   }
 
+  @GetMapping("/resend-confirm-email")
+  public ResponseEntity<Object> resendConfirmEmail(@RequestParam String email) {
+    return ResponseEntity.ok(authenticationService.resendEmail(email));
+  }
 }
