@@ -64,6 +64,16 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
     }
 
+    @ExceptionHandler(value = {
+            UnauthorizedException.class
+    })
+    public ResponseEntity<ApiExceptionObject> handleLogOutPermissionException(
+            RuntimeException e
+    ) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
+    }
+
     @ExceptionHandler
     private ResponseEntity<List<ErrorResponse>> handleException(
             ApiValidationException e) {

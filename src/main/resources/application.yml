@@ -1,1 +1,8 @@
-
+spring:
+  data:
+    redis:
+      port: 16379
+      host: localhost
+      password: nickfury
+      timeout: 60000
+      database: 0
