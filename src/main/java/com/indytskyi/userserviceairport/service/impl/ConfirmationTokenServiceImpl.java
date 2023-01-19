@@ -46,7 +46,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 .build();
 
         confirmationTokenRepository.save(confirmationToken);
-        return linkToConfirmRegistration + confirmationToken;
+        return linkToConfirmRegistration + token;
     }
 
 
