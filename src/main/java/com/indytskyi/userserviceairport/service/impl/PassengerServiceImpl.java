@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PassengerServiceImpl implements PassengerService {
-
     private final PassengerRepository passengerRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
