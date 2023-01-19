@@ -1,4 +1,4 @@
-package com.indytskyi.userserviceairport.security;
+package com.indytskyi.userserviceairport.config;
 
 import com.indytskyi.userserviceairport.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
