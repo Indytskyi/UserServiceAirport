@@ -1,6 +1,8 @@
 package com.indytskyi.userserviceairport.security.jwt;
 
+import com.indytskyi.userserviceairport.exception.AuthTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -17,8 +19,11 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private static final String BEARER_START = "Bearer ";
+    private static final int TOKEN_START_INDEX = 7;
     @Value("${SECRET_KEY}")
     private String secretKey;
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -69,5 +74,31 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String getUserName(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+    public String resolveToken(String bearerToken) {
+        return bearerToken != null && bearerToken.startsWith(BEARER_START)
+                ? bearerToken.substring(TOKEN_START_INDEX)
+                : null;
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (IllegalArgumentException | JwtException e) {
+            throw new AuthTokenException("Jwt auth token not valid!");
+        }
+
     }
 }

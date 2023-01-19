@@ -4,6 +4,7 @@ import com.indytskyi.userserviceairport.dto.PassengerDto;
 import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.exception.ApiValidationException;
 import com.indytskyi.userserviceairport.exception.ErrorResponse;
+import com.indytskyi.userserviceairport.mapper.PassengerDtoMapper;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.enums.Gender;
 import com.indytskyi.userserviceairport.repository.PassengerRepository;
@@ -20,7 +21,7 @@ import java.util.List;
 public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final PassengerDtoMapper passengerDtoMapper;
 
     @Override
     public List<PassengerDto> getAllPassenger() {
@@ -36,7 +37,7 @@ public class PassengerServiceImpl implements PassengerService {
                 .orElseThrow(() -> new ApiValidationException(
                         List.of(new ErrorResponse("email", "This email doesn`t exist"))
                 ));
-        return modelMapper.map(userByEmail.getPassenger(), PassengerDto.class);
+        return passengerDtoMapper.toPassengerDto(userByEmail.getPassenger());
     }
 
     @Override
