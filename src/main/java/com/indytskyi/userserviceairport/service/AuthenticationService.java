@@ -9,4 +9,6 @@ public interface AuthenticationService {
     AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
 
     ValidateTokenResponseDto validateToken(String token);
+
+    Object logout(String bearerToken);
 }

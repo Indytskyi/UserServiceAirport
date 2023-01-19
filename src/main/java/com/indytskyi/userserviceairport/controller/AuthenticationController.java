@@ -52,4 +52,10 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.validateToken(bearerToken));
   }
 
+  @GetMapping ("/logout")
+  public ResponseEntity<Object> logout(
+          @RequestHeader("Authorization") String bearerToken) {
+    return  ResponseEntity.ok(authenticationService.logout(bearerToken));
+  }
+
 }

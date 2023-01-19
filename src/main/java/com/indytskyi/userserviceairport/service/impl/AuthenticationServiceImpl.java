@@ -1,23 +1,15 @@
 package com.indytskyi.userserviceairport.service.impl;
 
 import com.indytskyi.userserviceairport.dto.*;
-import com.indytskyi.userserviceairport.email.BuildEmail;
-import com.indytskyi.userserviceairport.email.EmailSender;
-import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
-import com.indytskyi.userserviceairport.exception.UserNotFoundException;
-import com.indytskyi.userserviceairport.model.User;
-import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
+import com.indytskyi.userserviceairport.repository.LogoutRepository;
 import com.indytskyi.userserviceairport.security.jwt.JwtService;
 import com.indytskyi.userserviceairport.service.*;
-import com.indytskyi.userserviceairport.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -29,6 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
+    private final LogoutRepository logoutRepository;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -65,5 +58,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .userId(user.getId())
                 .role(user.getRole().name())
                 .build();
+    }
+
+    @Override
+    public Object logout(String bearerToken) {
+        var token = jwtService.resolveToken(bearerToken);
+        jwtService.validateToken(token);
+        var email = jwtService.getUserName(token);
+        var user = userService.findByEmail(email);
+        if (!logoutRepository.isLoggedOut(token))
+            logoutRepository.addUser(token, user.getEmail());
+
+        refreshTokenService.deleteOldRefreshTokens(user);
+        return Map.of("message", "Logoutz successful!");
     }
 }
