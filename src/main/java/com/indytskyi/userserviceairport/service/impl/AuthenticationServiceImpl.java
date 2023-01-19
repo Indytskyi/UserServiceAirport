@@ -1,9 +1,6 @@
 package com.indytskyi.userserviceairport.service.impl;
 
-import com.indytskyi.userserviceairport.dto.AuthenticationRequest;
-import com.indytskyi.userserviceairport.dto.AuthenticationResponse;
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
-import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
+import com.indytskyi.userserviceairport.dto.*;
 import com.indytskyi.userserviceairport.email.BuildEmail;
 import com.indytskyi.userserviceairport.email.EmailSender;
 import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
@@ -11,10 +8,7 @@ import com.indytskyi.userserviceairport.exception.UserNotFoundException;
 import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
 import com.indytskyi.userserviceairport.security.jwt.JwtService;
-import com.indytskyi.userserviceairport.service.AuthenticationService;
-import com.indytskyi.userserviceairport.service.ConfirmationTokenService;
-import com.indytskyi.userserviceairport.service.PassengerService;
-import com.indytskyi.userserviceairport.service.UserService;
+import com.indytskyi.userserviceairport.service.*;
 import com.indytskyi.userserviceairport.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     private final BuildEmail buildEmail;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     @Transactional
@@ -66,7 +61,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
         var user = userService.findByEmail(request.email());
         var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
-        return new AuthenticationResponse(jwtToken);
+        refreshTokenService.deleteOldRefreshTokens(user);
+        var refreshToken = refreshTokenService.create(user);
+
+        return new AuthenticationResponse(jwtToken, refreshToken.getToken());
     }
 
     @Transactional
@@ -100,6 +98,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         emailSender.send(email,
                 buildEmail.buildEmail(user.getPassenger().getFirstName(), linkToConfirmEmail));
         return "Nce";
+    }
+
+    @Override
+    public AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
+        var refreshToken = refreshTokenService.resolveRefreshToken(refreshTokenRequestDto.token());
+        var user = refreshToken.getUser();
+        var jwtToken = jwtService.generateToken(Map.of("ROLE", user.getRole()), user);
+        return new AuthenticationResponse(jwtToken, refreshToken.getToken());
     }
 
     private void checkIfUserIsEnabled(User user) {

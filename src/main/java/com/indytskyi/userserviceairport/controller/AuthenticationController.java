@@ -1,9 +1,6 @@
 package com.indytskyi.userserviceairport.controller;
 
-import com.indytskyi.userserviceairport.dto.AuthenticationRequest;
-import com.indytskyi.userserviceairport.dto.AuthenticationResponse;
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
-import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
+import com.indytskyi.userserviceairport.dto.*;
 import com.indytskyi.userserviceairport.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -38,4 +35,12 @@ public class AuthenticationController {
   public ResponseEntity<Object> resendConfirmEmail(@RequestParam String email) {
     return ResponseEntity.ok(authenticationService.resendEmail(email));
   }
+
+  @GetMapping("/refresh-token")
+  public ResponseEntity<AuthenticationResponse> refreshToken(
+          @RequestBody RefreshTokenRequestDto refreshTokenRequestDto
+  ) {
+    return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequestDto));
+  }
+
 }

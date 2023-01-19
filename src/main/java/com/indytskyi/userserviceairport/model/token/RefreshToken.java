@@ -6,23 +6,22 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true, builderMethodName = "of")
-@Entity
-public class ConfirmationToken {
+@Table(name = "refresh_tokem")
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String token;
-    @Column(nullable = false)
-    private LocalDateTime localDateTime;
-    @Column(nullable = false)
-    private LocalDateTime expiredAt;
-    private LocalDateTime confirmedAt;
     @OneToOne
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Column(nullable = false, unique = true)
+    private String token;
+    @Column( nullable = false)
+    private LocalDateTime expiredAt;
 }

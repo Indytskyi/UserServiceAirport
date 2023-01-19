@@ -1,9 +1,6 @@
 package com.indytskyi.userserviceairport.service;
 
-import com.indytskyi.userserviceairport.dto.AuthenticationRequest;
-import com.indytskyi.userserviceairport.dto.AuthenticationResponse;
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
-import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
+import com.indytskyi.userserviceairport.dto.*;
 import com.indytskyi.userserviceairport.model.User;
 
 public interface AuthenticationService {
@@ -12,4 +9,6 @@ public interface AuthenticationService {
     String confirmToken(String token);
 
     Object resendEmail(String email);
+
+    AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
 }
