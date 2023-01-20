@@ -1,6 +1,8 @@
 package com.indytskyi.userserviceairport.service.impl;
 
 import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.dto.UserDto;
+import com.indytskyi.userserviceairport.exception.UserDuplicateEmailException;
 import com.indytskyi.userserviceairport.exception.UserNotFoundException;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
@@ -17,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
 
     @Transactional
     @Override
@@ -42,4 +43,33 @@ public class UserServiceImpl implements UserService {
     public void enableUser(String email) {
         userRepository.enableUser(email);
     }
+
+    @Override
+    @Transactional
+    public void deleteUser(String email) {
+        userRepository.deleteByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public UserDto updateUser(UserDto userDto, String email) {
+        var user = findByEmail(email);
+        if (!userDto.getEmail().equals(email)) {
+            checkIfUserWithNewEmailExist(userDto.getEmail());
+        }
+
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        return userDto;
+    }
+
+    @Override
+    @Transactional
+    public void checkIfUserWithNewEmailExist(String newEmail) {
+        if (userRepository.findByEmail(newEmail).isPresent()) {
+            throw new UserDuplicateEmailException("A user with such email is already present");
+        }
+    }
+
+
 }

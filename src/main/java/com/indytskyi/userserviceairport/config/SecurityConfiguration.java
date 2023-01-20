@@ -24,7 +24,12 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/airport/user/**")
+                .requestMatchers("/airport/user/login",
+                        "/airport/user/register",
+                        "/airport/user/confirm",
+                        "/airport/user/resend-confirm-email",
+                        "/airport/user/refresh-token"
+                        )
                 .permitAll()
                 .anyRequest()
                 .authenticated()

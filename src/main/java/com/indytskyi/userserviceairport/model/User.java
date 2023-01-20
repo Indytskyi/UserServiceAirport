@@ -1,6 +1,8 @@
 package com.indytskyi.userserviceairport.model;
 
 import com.indytskyi.userserviceairport.model.enums.Role;
+import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
+import com.indytskyi.userserviceairport.model.token.RefreshToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -36,6 +38,12 @@ public class User implements UserDetails, Serializable {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Passenger passenger;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ConfirmationToken confirmationToken;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private RefreshToken refreshToken;
 
     public void setPassenger(Passenger passenger) {
         passenger.setUser(this);
