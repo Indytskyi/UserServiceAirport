@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public RegisterResponseDto register(RegisterRequest request) {
-
+        userService.checkIfUserWithNewEmailExist(request.getEmail());
         var passenger = passengerService.createPassenger(request);
         var user = userService.createUser(request, passenger);
 

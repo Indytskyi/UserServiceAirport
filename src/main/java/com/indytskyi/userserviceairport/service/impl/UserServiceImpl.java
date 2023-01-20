@@ -54,15 +54,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto updateUser(UserDto userDto, String email) {
         var user = findByEmail(email);
-        checkIfUserWithNewEmailExist(userDto.getEmail(), email);
+        if (!userDto.getEmail().equals(email)) {
+            checkIfUserWithNewEmailExist(userDto.getEmail());
+        }
+
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         return userDto;
     }
 
-    private void checkIfUserWithNewEmailExist(String newEmail, String oldEmail) {
-        if (!newEmail.equals(oldEmail) && userRepository.findByEmail(newEmail).isPresent()) {
+    @Override
+    @Transactional
+    public void checkIfUserWithNewEmailExist(String newEmail) {
+        if (userRepository.findByEmail(newEmail).isPresent()) {
             throw new UserDuplicateEmailException("A user with such email is already present");
         }
     }
+
+
 }

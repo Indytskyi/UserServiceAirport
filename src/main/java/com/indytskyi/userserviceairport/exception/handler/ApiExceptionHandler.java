@@ -76,7 +76,8 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            UnauthorizedException.class
+            UnauthorizedException.class,
+            RefreshTokenException.class
     })
     public ResponseEntity<ApiExceptionObject> handleLogOutPermissionException(
             RuntimeException e
