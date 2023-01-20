@@ -4,7 +4,7 @@ import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.dto.RegisterResponseDto;
 import com.indytskyi.userserviceairport.email.BuildEmail;
 import com.indytskyi.userserviceairport.email.EmailSender;
-import com.indytskyi.userserviceairport.exception.ConfirmationTokenInvalidException;
+import com.indytskyi.userserviceairport.exception.LimitedPermissionException;
 import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
 import com.indytskyi.userserviceairport.service.ConfirmationTokenService;
@@ -81,6 +81,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkIfUserIsEnabled(User user) {
         if (user.isEnabled())
-            throw new ConfirmationTokenInvalidException("Your email: " + user.getEmail() + " was already confirmed");
+            throw new LimitedPermissionException("Your email: " + user.getEmail() + " was already confirmed");
     }
 }

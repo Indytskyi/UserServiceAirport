@@ -61,6 +61,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+
+
+
     @Override
     public Object logout(String bearerToken) {
         var token = jwtService.resolveToken(bearerToken);

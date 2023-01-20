@@ -40,6 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User doesn't exist"));
+    }
+
+    @Override
     public void enableUser(String email) {
         userRepository.enableUser(email);
     }

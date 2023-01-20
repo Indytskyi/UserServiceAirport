@@ -11,4 +11,5 @@ public interface AuthenticationService {
     ValidateTokenResponseDto validateToken(String token);
 
     Object logout(String bearerToken);
+
 }

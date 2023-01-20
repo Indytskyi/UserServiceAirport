@@ -10,6 +10,7 @@ public interface UserService {
     User createUser(RegisterRequest request, Passenger passenger);
 
     User findByEmail(String email);
+    User findById(Long id);
 
     void enableUser(String email);
 
