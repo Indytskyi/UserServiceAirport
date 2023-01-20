@@ -1,18 +1,20 @@
 package com.indytskyi.userserviceairport.service;
 
-import com.indytskyi.userserviceairport.dto.PassengerDto;
+import com.indytskyi.userserviceairport.dto.PassengerRequestDto;
+import com.indytskyi.userserviceairport.dto.PassengerResponseDto;
 import com.indytskyi.userserviceairport.dto.RegisterRequest;
 import com.indytskyi.userserviceairport.model.Passenger;
-import com.indytskyi.userserviceairport.model.User;
 
 import java.util.List;
 
 public interface PassengerService {
-    List<PassengerDto> getAllPassenger();
+    List<PassengerResponseDto> getAllPassenger();
 
-    PassengerDto getPassengerByEmail(String email);
+    PassengerResponseDto getPassengerByEmail(String email);
 
     Object getAllPassengerOrByEmail(String email);
 
     Passenger createPassenger(RegisterRequest request);
+
+    PassengerResponseDto updatePassengerByEmail(PassengerRequestDto requestDto, String email);
 }

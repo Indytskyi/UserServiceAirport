@@ -64,6 +64,17 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
     }
 
+
+    @ExceptionHandler(value = {
+            UserDuplicateEmailException.class
+    })
+    public ResponseEntity<ApiExceptionObject> ConstrainsPermissionException(
+            RuntimeException e
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(getApiExceptionObject(e.getMessage(), status), status);
+    }
+
     @ExceptionHandler(value = {
             UnauthorizedException.class
     })
