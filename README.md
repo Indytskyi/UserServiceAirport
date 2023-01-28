@@ -1,7 +1,7 @@
 # User service Airport  
 ## Indytskyi Artem 
 ---
-### Stack of technologies :)
+### Stack of technologies :smiley:
 
 - `Spring Boot 3.0.2`
 - `Flyway` 
@@ -13,7 +13,7 @@
 You will like those projects!
 
 ---
-### General info 
+### General info :musical_note:
 This is part of a test project based on the simulation of the airport system. This microservice implements the security of the project.
 
 It includes:
@@ -22,7 +22,7 @@ It includes:
 3. login part 
 4. logout part
 ---
-### How to start service locally
+### How to start service locally :construction_worker:
 
 No additional configurations are needed to start the service. All configurations are in application.yaml.
 
@@ -52,10 +52,10 @@ docker pull maildev/maildev
 ````
 docker run -p 1087:1080 -p 1025:1025 maildev/maildev
 ````
-Run your application 8-)
+Run your application :sunglasses:
 
 ---
-### Usage
+### Usage :star:
 The user of this service can perform next methods:
 
 - Get all passegers or by Email `Admin + Authorized`
@@ -73,11 +73,11 @@ The user of this service can perform next methods:
 - [Open the Swagger](http://localhost:8080/swagger-ui/index.html#/) - port on which you run the application
 - Add a file for the postman from the root folder 
 
-### IMPOTRANT
+### IMPOTRANT :fire: :fire:
 - The hash of the password is passed to the entity, but not the password. As planned, the password should be hashed on the client side.
 - Go to the test page to open and [confirm the email](http://0.0.0.0.0:1087) <- `Replace the port on which you are running` 
 - Replace the secret key with your personal key to prevent them from hacking and generating a token (the key can be found in the yam file )
 
 ---
-### THANKS
+### THANKS :heart:
 ---
