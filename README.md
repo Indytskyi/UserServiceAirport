@@ -39,7 +39,7 @@ docker pull redis
 ````
 2. Start container
 ```
-docker run -p 16379:6379 -d redis:latest redis-server --requirepass "nickfury" 
+docker run -p 6379:6379 -d redis:latest redis-server --requirepass "nickfury" 
 
 ````
 For a guide for usage with Docker, [checkout the docs](https://github.com/maildev/maildev/blob/master/docs/docker.md).
