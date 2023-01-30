@@ -23,6 +23,6 @@ public class ConfirmationToken {
     private LocalDateTime expiredAt;
     private LocalDateTime confirmedAt;
     @OneToOne
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id", referencedColumnName = "id")
     private User user;
 }

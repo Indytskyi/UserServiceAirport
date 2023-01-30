@@ -2,7 +2,7 @@ package com.indytskyi.userserviceairport.service;
 
 import com.indytskyi.userserviceairport.dto.PassengerRequestDto;
 import com.indytskyi.userserviceairport.dto.PassengerResponseDto;
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.dto.RegisterRequestDto;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
 
@@ -13,7 +13,7 @@ public interface PassengerService {
 
     PassengerResponseDto getPassengerByEmail(User user);
 
-    Passenger createPassenger(RegisterRequest request);
+    Passenger createPassenger(RegisterRequestDto request);
 
     PassengerResponseDto updatePassengerByEmail(PassengerRequestDto requestDto, String bearerToken);
 }

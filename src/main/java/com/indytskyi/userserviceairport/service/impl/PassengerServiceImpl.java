@@ -2,7 +2,7 @@ package com.indytskyi.userserviceairport.service.impl;
 
 import com.indytskyi.userserviceairport.dto.PassengerRequestDto;
 import com.indytskyi.userserviceairport.dto.PassengerResponseDto;
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.dto.RegisterRequestDto;
 import com.indytskyi.userserviceairport.exception.ApiValidationException;
 import com.indytskyi.userserviceairport.exception.ErrorResponse;
 import com.indytskyi.userserviceairport.mapper.PassengerDtoMapper;
@@ -10,12 +10,10 @@ import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
 import com.indytskyi.userserviceairport.model.enums.Gender;
 import com.indytskyi.userserviceairport.repository.PassengerRepository;
-import com.indytskyi.userserviceairport.repository.UserRepository;
 import com.indytskyi.userserviceairport.service.AccessService;
 import com.indytskyi.userserviceairport.service.PassengerService;
 import com.indytskyi.userserviceairport.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +43,7 @@ public class PassengerServiceImpl implements PassengerService {
 
 
     @Override
-    public Passenger createPassenger(RegisterRequest request) {
+    public Passenger createPassenger(RegisterRequestDto request) {
         return Passenger.of()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())

@@ -28,7 +28,10 @@ public class SecurityConfiguration {
                         "/airport/user/register",
                         "/airport/user/confirm",
                         "/airport/user/resend-confirm-email",
-                        "/airport/user/refresh-token"
+                        "/airport/user/refresh-token",
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**"
                         )
                 .permitAll()
                 .anyRequest()

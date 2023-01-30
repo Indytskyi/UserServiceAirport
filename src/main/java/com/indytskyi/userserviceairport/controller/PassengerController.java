@@ -30,7 +30,7 @@ public class PassengerController {
         return ResponseEntity.ok(passengerService.getPassengerByEmail(user));
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<PassengerResponseDto> updatePassenger(
             @RequestBody @Valid PassengerRequestDto requestDto,
             @RequestHeader("Authorization") String bearerToken) {

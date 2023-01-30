@@ -16,10 +16,10 @@ public class UserController {
     private final UserService userService;
     private final AccessService accessService;
 
-    @DeleteMapping()
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@RequestHeader("Authorization") String bearerToken) {
-        var  user = accessService.getUserFromTokenAfterValidation(bearerToken);
+        var user = accessService.getUserFromTokenAfterValidation(bearerToken);
         userService.deleteUser(user.getEmail());
     }
 
