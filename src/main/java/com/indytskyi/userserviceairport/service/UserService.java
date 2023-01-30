@@ -1,15 +1,16 @@
 package com.indytskyi.userserviceairport.service;
 
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.dto.RegisterRequestDto;
 import com.indytskyi.userserviceairport.dto.UserDto;
 import com.indytskyi.userserviceairport.model.Passenger;
 import com.indytskyi.userserviceairport.model.User;
 
 public interface UserService {
 
-    User createUser(RegisterRequest request, Passenger passenger);
+    User createUser(RegisterRequestDto request, Passenger passenger);
 
     User findByEmail(String email);
+    User findById(Long id);
 
     void enableUser(String email);
 

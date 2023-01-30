@@ -3,7 +3,8 @@ package com.indytskyi.userserviceairport.controller;
 import com.indytskyi.userserviceairport.dto.*;
 import com.indytskyi.userserviceairport.service.AuthenticationService;
 import com.indytskyi.userserviceairport.service.RegistrationService;
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,25 @@ public class AuthenticationController {
   private final AuthenticationService authenticationService;
   private final RegistrationService registrationService;
 
+  @Operation(
+          summary = "Registration a new user",
+          description = "Allows to register a new user. "
+                  + "As response user gets a message that confirmation email was sent.",
+          tags = {"Authentication"},
+          responses = {
+                  @ApiResponse(responseCode = "201", description = "Created"),
+                  @ApiResponse(responseCode = "400", description = "Bad Request"),
+                  @ApiResponse(responseCode = "409", description = "Conflict")
+          }
+  )
   @PostMapping("/register")
-  public ResponseEntity<RegisterResponseDto> register(@RequestBody @Valid RegisterRequest request) {
+  public ResponseEntity<RegisterResponseDto> register(@RequestBody @Valid RegisterRequestDto request) {
     return new ResponseEntity<>(registrationService.register(request),
             HttpStatus.CREATED);
   }
   @PostMapping("/login")
   public ResponseEntity<AuthenticationResponse> authenticate(
-      @RequestBody AuthenticationRequest request) {
+      @RequestBody AuthenticationRequestDto request) {
     return ResponseEntity.ok(authenticationService.authenticate(request));
   }
 

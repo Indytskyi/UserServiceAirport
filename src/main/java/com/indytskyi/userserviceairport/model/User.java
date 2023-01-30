@@ -39,7 +39,7 @@ public class User implements UserDetails, Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Passenger passenger;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private ConfirmationToken confirmationToken;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)

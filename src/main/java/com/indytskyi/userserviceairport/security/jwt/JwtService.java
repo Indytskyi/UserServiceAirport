@@ -21,6 +21,7 @@ import java.util.function.Function;
 public class JwtService {
     private static final String BEARER_START = "Bearer ";
     private static final int TOKEN_START_INDEX = 7;
+
     @Value("${SECRET_KEY}")
     private String secretKey;
 
@@ -90,10 +91,11 @@ public class JwtService {
                 : null;
     }
 
+
     public void validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey  (secretKey)
                     .build()
                     .parseClaimsJws(token);
         } catch (IllegalArgumentException | JwtException e) {

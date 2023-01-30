@@ -1,12 +1,11 @@
 package com.indytskyi.userserviceairport.exception.handler;
 
 import com.indytskyi.userserviceairport.exception.*;
-import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,7 +44,8 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            ConfirmationTokenInvalidException.class
+            LimitedPermissionException.class,
+            IllegalStateException.class
     })
     public ResponseEntity<ApiExceptionObject> handleConfirmationTokenInvalidException(
             RuntimeException e
@@ -100,6 +100,12 @@ public class ApiExceptionHandler {
                 HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(DisabledException e) {
+        return new ResponseEntity<>(new ErrorResponse("Authentication",
+                "Your email has not been verified"),
+                HttpStatus.FORBIDDEN);
+    }
     private ApiExceptionObject getApiExceptionObject(String message, HttpStatus status) {
         return new ApiExceptionObject(
                 message,

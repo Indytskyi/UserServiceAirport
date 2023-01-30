@@ -24,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final LogoutRepository logoutRepository;
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequestDto request) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -73,4 +73,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         refreshTokenService.deleteOldRefreshTokens(user);
         return Map.of("message", "Logoutz successful!");
     }
+
 }

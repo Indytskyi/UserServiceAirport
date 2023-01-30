@@ -1,6 +1,6 @@
 package com.indytskyi.userserviceairport.service.impl;
 
-import com.indytskyi.userserviceairport.dto.RegisterRequest;
+import com.indytskyi.userserviceairport.dto.RegisterRequestDto;
 import com.indytskyi.userserviceairport.dto.UserDto;
 import com.indytskyi.userserviceairport.exception.UserDuplicateEmailException;
 import com.indytskyi.userserviceairport.exception.UserNotFoundException;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(RegisterRequest request, Passenger passenger) {
+    public User createUser(RegisterRequestDto request, Passenger passenger) {
         var user = User.of()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -37,6 +37,12 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email: " + email + " doesn't exist"));
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User doesn't exist"));
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.indytskyi.userserviceairport.repository.ConfirmationTokenRepository;
 import com.indytskyi.userserviceairport.service.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,13 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public void deleteOldConfirmationToken(User user) {
-        confirmationTokenRepository.deleteByUser(user);
+    @Transactional
+    public void deleteOldConfirmationToken(Long confirmationId) {
+         confirmationTokenRepository.deleteById(confirmationId);
     }
 
     @Override
+    @Transactional
     public String createConfirmationToken(User user) {
         String token = UUID.randomUUID().toString();
         var confirmationToken = ConfirmationToken.of()
@@ -51,6 +54,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
 
     @Transactional
+    @Override
     public void setConfirmedAt(String token) {
          confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());

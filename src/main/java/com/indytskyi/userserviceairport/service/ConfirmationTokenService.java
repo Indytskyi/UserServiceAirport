@@ -6,9 +6,8 @@ import com.indytskyi.userserviceairport.model.token.ConfirmationToken;
 import java.util.Optional;
 
 public interface ConfirmationTokenService {
-    void saveConfirmationToken(ConfirmationToken confirmationToken);
     void setConfirmedAt(String token);
     Optional<ConfirmationToken> getToken(String token);
-    void deleteOldConfirmationToken(User user);
+    void deleteOldConfirmationToken(Long confirmationId);
     String createConfirmationToken(User user);
 }

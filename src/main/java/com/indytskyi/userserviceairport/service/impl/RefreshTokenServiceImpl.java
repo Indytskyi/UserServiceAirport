@@ -58,7 +58,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public void deleteOldRefreshTokens(User user) {
-        var refreshToken =  refreshTokenRepository.findByUser(user);
+        var refreshToken = refreshTokenRepository.findByUser(user);
         refreshToken.ifPresent(token -> refreshTokenRepository.deleteById(token.getId()));
     }
 }
