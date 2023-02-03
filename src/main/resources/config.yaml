@@ -1,0 +1,49 @@
+# Configuration yaml for application yaml
+spring:
+  mail:
+    host: localhost
+    port: 1025 # your port
+    username: hello # your username
+    password: hello # your password
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # on the first start, change it to CREATE, on the second start, change it to VALIDATE
+    properties:
+      hibernate:
+        show_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url:  # url to datasource
+    username: # your username
+    password: # your password
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka # if you want to connect eureka
+  instance:
+    prefer-ip-address: true
+
+SECRET_KEY: # secret key for jwt
+LINK_TO_CONFIRM_REGISTRATION: "http://localhost:8080/airport/user/confirm?token="
+
+jwt:
+  token:
+    expiredTime: 3600000
+  refresh:
+    token:
+      expiredTime:
+        min: 720
