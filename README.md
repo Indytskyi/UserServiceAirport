@@ -77,6 +77,8 @@ The user of this service can perform next methods:
 - The hash of the password is passed to the entity, but not the password. As planned, the password should be hashed on the client side.
 - Go to the test page to open and [confirm the email](http://0.0.0.0.0:1087) <- `Replace the port on which you are running` 
 - Replace the secret key with your personal key to prevent them from hacking and generating a token (the key can be found in the yam file )
+- bootstrap.yml - whose file calls a separate service 
+ so that all your configurations and settings are pulled from a separate service and are secured  
 
 ---
 ### THANKS :heart:
